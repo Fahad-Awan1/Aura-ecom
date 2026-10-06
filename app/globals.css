@@ -1,0 +1,122 @@
+@import "tailwindcss";
+
+:root {
+  --brown-950: #2a1d14;
+  --brown-900: #3b2a1e;
+  --brown-800: #4a3527;
+  --brown-700: #5a4332;
+  --taupe: #8a6f58;
+  --sand: #c9b29a;
+  --cream: #f5efe8;
+  --ivory: #fbf8f4;
+  --gold: #b8935a;
+  --ink: #1d1712;
+}
+
+@theme inline {
+  --color-brown-950: var(--brown-950);
+  --color-brown-900: var(--brown-900);
+  --color-brown-800: var(--brown-800);
+  --color-brown-700: var(--brown-700);
+  --color-taupe: var(--taupe);
+  --color-sand: var(--sand);
+  --color-cream: var(--cream);
+  --color-ivory: var(--ivory);
+  --color-gold: var(--gold);
+  --color-ink: var(--ink);
+  --font-serif: var(--font-bodoni), "Didot", Georgia, serif;
+  --font-display: var(--font-playfair), Georgia, serif;
+  --font-sans: var(--font-jost), system-ui, sans-serif;
+}
+
+html {
+  background: var(--brown-900);
+}
+
+body {
+  background: #fff;
+  color: var(--ink);
+  font-family: var(--font-jost), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  /* clip (not hidden) so position: sticky keeps working */
+  overflow-x: clip;
+}
+
+::selection {
+  background: var(--gold);
+  color: #fff;
+}
+
+/* Lenis */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* Hero outline lettering */
+.text-outline {
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgba(245, 239, 232, 0.9);
+}
+
+.eyebrow {
+  font-family: var(--font-jost);
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+/* Split text masks */
+.split-line {
+  overflow: hidden;
+  padding-bottom: 0.08em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.96);
+  }
+}
+
+@keyframes msg-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+@keyframes typing {
+  0%, 60%, 100% {
+    transform: translateY(0);
+    opacity: 0.4;
+  }
+  30% {
+    transform: translateY(-4px);
+    opacity: 1;
+  }
+}
+
