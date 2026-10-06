@@ -109,7 +109,7 @@ export default function ProductDetail({ product, related, initialColor }: { prod
                 </div>
               </div>
             </div>
-            <div className="no-scrollbar mt-3 flex gap-3 overflow-x-auto">
+            <div className="no-scrollbar -mx-1 mt-2 flex gap-3 overflow-x-auto p-1">
               {product.colors.map((c) => (
                 <button
                   key={c.name}

@@ -39,7 +39,8 @@ function load(): Message[] {
 export default function ChatWidget() {
   const open = useShop((s) => s.chatOpen);
   const setOpen = useShop((s) => s.setChatOpen);
-  const cartOpen = useShop((s) => s.cartOpen);
+  // hide the launcher while a full-screen overlay (bag, menu, search) is open
+  const covered = useShop((s) => s.cartOpen || s.menuOpen || s.searchOpen);
   const [messages, setMessages] = useState<Message[]>(() => [{ id: 0, from: "bot", text: WELCOME.text, reply: WELCOME }]);
   const [restored, setRestored] = useState(false);
   const [input, setInput] = useState("");
@@ -102,8 +103,8 @@ export default function ChatWidget() {
         aria-label={open ? "Close chat" : "Chat with Aria, our style assistant"}
         aria-expanded={open}
         className={clsx(
-          "fixed bottom-4 right-4 z-[58] grid h-14 w-14 place-items-center rounded-full bg-brown-900 text-cream shadow-[0_15px_40px_-10px_rgba(42,29,20,0.7)] transition-all duration-500 hover:scale-105 hover:bg-gold sm:bottom-6 sm:right-6",
-          cartOpen && "pointer-events-none scale-0 opacity-0",
+          "fixed bottom-3 right-3 z-[58] grid h-12 w-12 place-items-center sm:h-14 sm:w-14 rounded-full bg-brown-900 text-cream shadow-[0_15px_40px_-10px_rgba(42,29,20,0.7)] transition-all duration-500 hover:scale-105 hover:bg-gold sm:bottom-6 sm:right-6",
+          covered && !open && "pointer-events-none scale-0 opacity-0",
         )}
       >
         <span className={clsx("absolute transition-all duration-500", open ? "rotate-0 scale-100 opacity-100" : "-rotate-90 scale-50 opacity-0")}>

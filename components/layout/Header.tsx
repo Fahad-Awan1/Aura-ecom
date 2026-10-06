@@ -190,7 +190,7 @@ export default function Header() {
           ))}
         </nav>
         <div className="overflow-hidden">
-          <p data-m className="eyebrow text-cream/60">
+          <p data-m className="eyebrow max-w-[18rem] text-[0.65rem] leading-relaxed tracking-[0.25em] text-cream/60">
             Style is a way to say who you are
           </p>
         </div>

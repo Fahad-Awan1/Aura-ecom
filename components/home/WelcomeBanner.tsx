@@ -57,15 +57,18 @@ export default function WelcomeBanner() {
       });
 
       // card grows into place; a transform stays on the GPU, unlike the clip-path this used to scrub
-      gsap.fromTo(
-        "[data-card]",
-        { scale: 0.86 },
-        {
-          scale: 1,
-          ease: "none",
-          scrollTrigger: { trigger: root.current, start: "top 95%", end: "top 25%", scrub: 0.8 },
-        },
-      );
+      const mm = gsap.matchMedia();
+      mm.add("(min-width: 768px)", () => {
+        gsap.fromTo(
+          "[data-card]",
+          { scale: 0.86 },
+          {
+            scale: 1,
+            ease: "none",
+            scrollTrigger: { trigger: root.current, start: "top 95%", end: "top 25%", scrub: 0.8 },
+          },
+        );
+      });
       gsap.fromTo("[data-rack]", { yPercent: -10, scale: 1.2 }, { yPercent: 10, scale: 1.05, ease: "none", scrollTrigger: { trigger: root.current, start: "top bottom", end: "bottom top", scrub: true } });
 
       const tl = gsap.timeline({ scrollTrigger: { trigger: "[data-values]", start: "top 85%" } });
@@ -76,6 +79,7 @@ export default function WelcomeBanner() {
         .from("[data-dash]", { scaleX: 0, duration: 0.8, stagger: 0.15, ease: "expo.out" }, 0.6);
 
       return () => {
+        mm.revert();
         offLoaded();
         window.clearTimeout(timer);
       };
