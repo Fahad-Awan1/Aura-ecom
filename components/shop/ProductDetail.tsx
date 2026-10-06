@@ -103,7 +103,7 @@ export default function ProductDetail({ product, related, initialColor }: { prod
                     .filter((c) => seen.includes(c.name))
                     .map((c) => (
                       <div key={c.name} data-active={c.name === color.name} className={clsx("absolute inset-0 transition-opacity duration-700", c.name === color.name ? "opacity-100" : "opacity-0")}>
-                        <Image src={c.image} alt={`${product.name} — ${c.name}`} fill priority={c.name === color.name} sizes="(max-width:768px) 100vw, 50vw" className="object-cover" />
+                        <Image src={c.image} alt={`${product.name} — ${c.name}`} fill preload={c.name === color.name} sizes="(max-width:768px) 100vw, 50vw" className="object-cover" />
                       </div>
                     ))}
                 </div>

@@ -10,9 +10,9 @@ import SearchOverlay from "@/components/layout/SearchOverlay";
 import Toaster from "@/components/layout/Toaster";
 import ChatWidget from "@/components/chat/ChatWidget";
 
-const bodoni = Bodoni_Moda({ variable: "--font-bodoni", subsets: ["latin"], weight: ["400", "500", "600"] });
-const playfair = Playfair_Display({ variable: "--font-playfair", subsets: ["latin"], weight: ["400", "500", "600"] });
-const jost = Jost({ variable: "--font-jost", subsets: ["latin"], weight: ["300", "400", "500", "600"] });
+const bodoni = Bodoni_Moda({ variable: "--font-bodoni", subsets: ["latin"], weight: "400" });
+const playfair = Playfair_Display({ variable: "--font-playfair", subsets: ["latin"], weight: "400" });
+const jost = Jost({ variable: "--font-jost", subsets: ["latin"], weight: ["400", "500", "600"] });
 
 export const metadata: Metadata = {
   title: "Aura — Timeless Fashion",

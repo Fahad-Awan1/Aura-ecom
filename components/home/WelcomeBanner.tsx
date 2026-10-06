@@ -7,6 +7,7 @@ import { Gem, Heart } from "lucide-react";
 import SectionHeading from "@/components/ui/SectionHeading";
 import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
 import { siteImages } from "@/lib/products";
+import { onSiteLoaded } from "@/lib/loaded";
 
 const SilkScene = dynamic(() => import("@/components/three/SilkScene"), { ssr: false });
 
@@ -29,9 +30,24 @@ export default function WelcomeBanner() {
   const root = useRef<HTMLElement>(null);
   const velocity = useRef(0);
   const [active, setActive] = useState(false);
+  // the three.js chunk (~900KB) is only fetched once the visitor scrolls near the banner
+  const [near, setNear] = useState(false);
 
   useGSAP(
     () => {
+      // Set up WebGL while the visitor is still reading the hero: after the intro has played, in idle time.
+      // Scrolling close to the banner first also triggers it, whichever happens sooner.
+      const idle = (fn: () => void) => ("requestIdleCallback" in window ? requestIdleCallback(fn, { timeout: 1500 }) : setTimeout(fn, 200));
+      let timer = 0;
+      const offLoaded = onSiteLoaded(() => {
+        timer = window.setTimeout(() => idle(() => setNear(true)), 2600);
+      });
+      ScrollTrigger.create({
+        trigger: root.current,
+        start: "top bottom+=50%",
+        once: true,
+        onEnter: () => setNear(true),
+      });
       ScrollTrigger.create({
         trigger: root.current,
         start: "top bottom",
@@ -40,12 +56,12 @@ export default function WelcomeBanner() {
         onUpdate: (s) => (velocity.current = Math.min(Math.abs(s.getVelocity()) / 2500, 1.5)),
       });
 
-      // card grows out of an inset frame
+      // card grows into place; a transform stays on the GPU, unlike the clip-path this used to scrub
       gsap.fromTo(
         "[data-card]",
-        { clipPath: "inset(12% 10% 12% 10% round 40px)" },
+        { scale: 0.86 },
         {
-          clipPath: "inset(0% 0% 0% 0% round 28px)",
+          scale: 1,
           ease: "none",
           scrollTrigger: { trigger: root.current, start: "top 95%", end: "top 25%", scrub: 0.8 },
         },
@@ -58,19 +74,24 @@ export default function WelcomeBanner() {
         .from("[data-vtext]", { y: 20, autoAlpha: 0, duration: 1, stagger: 0.15, ease: "expo.out" }, 0.3)
         .from("[data-vline]", { scaleY: 0, duration: 1, stagger: 0.15, ease: "expo.out" }, 0.3)
         .from("[data-dash]", { scaleX: 0, duration: 0.8, stagger: 0.15, ease: "expo.out" }, 0.6);
+
+      return () => {
+        offLoaded();
+        window.clearTimeout(timer);
+      };
     },
     { scope: root },
   );
 
   return (
     <section ref={root} className="bg-white px-3 pb-16 md:px-[4.5%] md:pb-24">
-      <div data-card className="relative mx-auto grid max-w-[1320px] overflow-hidden rounded-[28px] bg-brown-900 md:min-h-[560px] md:grid-cols-[0.95fr_1.05fr]">
+      <div data-card className="relative mx-auto grid will-change-transform max-w-[1320px] overflow-hidden rounded-[28px] bg-brown-900 md:min-h-[560px] md:grid-cols-[0.95fr_1.05fr]">
         {/* warm wall glow */}
         <div className="absolute inset-0 bg-[radial-gradient(80%_100%_at_20%_30%,#7a5a40_0%,#4a3426_45%,#2f2118_100%)]" />
 
         {/* rack photo, fading into the card */}
         <div className="relative h-[340px] overflow-hidden md:h-auto">
-          <div data-rack className="absolute inset-0">
+          <div data-rack className="absolute inset-0 will-change-transform">
             <Image src={siteImages.rack} alt="Clothing rack with neutral-toned garments" fill sizes="(max-width:768px) 100vw, 50vw" className="object-cover object-center" />
           </div>
           <div className="absolute inset-0 bg-gradient-to-t from-brown-900 via-transparent to-transparent md:bg-gradient-to-r md:from-transparent md:via-transparent md:to-brown-900" />
@@ -80,7 +101,7 @@ export default function WelcomeBanner() {
         {/* content */}
         <div className="relative flex flex-col items-center justify-center px-6 py-14 md:px-12">
           <div className="pointer-events-none absolute inset-0 opacity-70 mix-blend-screen">
-            <SilkScene active={active} velocity={velocity} />
+            {near && <SilkScene active={active} velocity={velocity} />}
           </div>
           <div className="relative">
             <SectionHeading eyebrow="Welcome to" title="More Than Fashion" subtitle="Discover quality. Experience elegance." tone="light" />

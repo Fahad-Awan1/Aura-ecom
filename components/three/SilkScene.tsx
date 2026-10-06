@@ -1,7 +1,7 @@
 "use client";
 
-import { useMemo, useRef } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { useEffect, useMemo, useRef } from "react";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { prefersReducedMotion } from "@/lib/gsap";
 
@@ -55,11 +55,12 @@ const vertex = /* glsl */ `
     return 42.0 * dot(m*m, vec4(dot(p0,x0), dot(p1,x1), dot(p2,x2), dot(p3,x3)));
   }
 
+  // one noise octave + two cheap sines: it is evaluated 3x per vertex for the normal
   float height(vec2 p) {
     float t = uTime * 0.12;
-    float n = snoise(vec3(p.x * 0.55 + t, p.y * 1.1 - t * 0.6, t)) * 0.55;
-    n += snoise(vec3(p.x * 1.3 - t, p.y * 0.9, t * 1.4)) * 0.22;
+    float n = snoise(vec3(p.x * 0.55 + t, p.y * 1.1 - t * 0.6, t)) * 0.6;
     n += sin(p.x * 1.6 + p.y * 0.8 + uTime * 0.5) * 0.18;
+    n += sin(p.x * 2.7 - p.y * 1.9 - uTime * 0.35) * 0.07;
     return n * (1.0 + uVelocity * 0.8);
   }
 
@@ -68,7 +69,7 @@ const vertex = /* glsl */ `
     vec3 pos = position;
     float h = height(pos.xy);
     pos.z += h;
-    float e = 0.02;
+    float e = 0.04;
     float hx = height(pos.xy + vec2(e, 0.0));
     float hy = height(pos.xy + vec2(0.0, e));
     vNormal2 = normalize(vec3(h - hx, h - hy, e));
@@ -100,6 +101,11 @@ const fragment = /* glsl */ `
 
 function Silk({ velocity }: { velocity: React.RefObject<number> }) {
   const mat = useRef<THREE.ShaderMaterial>(null);
+  const { gl, scene, camera } = useThree();
+  // compile without blocking (KHR_parallel_shader_compile) before the first visible frame
+  useEffect(() => {
+    gl.compileAsync(scene, camera).catch(() => {});
+  }, [gl, scene, camera]);
   const uniforms = useMemo(
     () => ({
       uTime: { value: 0 },
@@ -118,7 +124,7 @@ function Silk({ velocity }: { velocity: React.RefObject<number> }) {
   });
   return (
     <mesh rotation={[-0.5, 0.15, 0.1]} position={[0, 0, 0]}>
-      <planeGeometry args={[9, 5, 220, 120]} />
+      <planeGeometry args={[9, 5, 128, 72]} />
       <shaderMaterial ref={mat} vertexShader={vertex} fragmentShader={fragment} uniforms={uniforms} transparent depthWrite={false} />
     </mesh>
   );
@@ -129,9 +135,14 @@ export default function SilkScene({ active, velocity }: { active: boolean; veloc
   return (
     <Canvas
       frameloop={active ? "always" : "never"}
-      dpr={[1, 1.5]}
+      dpr={[1, 1.25]}
+      // measure on real resizes only: scroll-time measuring picked up the banner's scale tween and
+      // reallocated the WebGL buffer every frame
+      resize={{ scroll: false, debounce: { scroll: 0, resize: 150 } }}
       camera={{ position: [0, 0, 3.4], fov: 45 }}
-      gl={{ alpha: true, antialias: true, powerPreference: "low-power" }}
+      gl={{ alpha: true, antialias: false, powerPreference: "low-power" }}
+      // skips the synchronous getProgramInfoLog call that stalled scrolling for ~300ms on first render
+      onCreated={({ gl }) => void (gl.debug.checkShaderErrors = false)}
       className="!absolute inset-0"
     >
       <Silk velocity={velocity} />

@@ -133,34 +133,38 @@ export default function Hero() {
     >
       {/* floor shadow + vignette */}
       <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[#3e2e22]/70 to-transparent" />
-      <div className="absolute inset-0 shadow-[inset_0_0_220px_rgba(30,20,12,0.55)]" />
+      {/* vignette as a gradient: an inset box-shadow this size is repainted whenever anything above it moves */}
+      <div className="absolute inset-0 bg-[radial-gradient(75%_75%_at_55%_45%,transparent_55%,rgba(30,20,12,0.5)_100%)]" />
 
       {/* diagonal light beam */}
       <div data-beam className="pointer-events-none absolute inset-0">
-        <div data-beam-scroll className="absolute inset-0">
-          <div data-beam-move className="absolute -right-[10%] -top-[30%] h-[160%] w-[38%] rotate-[28deg] bg-gradient-to-r from-transparent via-[#f3dcc1]/25 to-transparent blur-2xl" />
-          <div data-beam-move className="absolute right-[12%] -top-[30%] h-[160%] w-[10%] rotate-[28deg] bg-gradient-to-r from-transparent via-[#f8e7d2]/15 to-transparent blur-xl" />
+        <div data-beam-scroll className="absolute inset-0 will-change-transform">
+          {/* soft edges come from the gradient itself; a blur filter here would be re-rasterised every frame */}
+          <div data-beam-move className="absolute -right-[10%] -top-[30%] h-[160%] w-[38%] rotate-[28deg] bg-[linear-gradient(90deg,transparent,rgba(243,220,193,0.2)_50%,transparent)] will-change-transform" />
+          <div data-beam-move className="absolute right-[12%] -top-[30%] h-[160%] w-[10%] rotate-[28deg] bg-[linear-gradient(90deg,transparent,rgba(248,231,210,0.12)_50%,transparent)] will-change-transform" />
         </div>
       </div>
 
-      <div data-word className="absolute inset-0 [transform-style:preserve-3d]">
+      <div data-word className="absolute inset-0 will-change-transform [transform-style:preserve-3d]">
         <Word layer="base" />
       </div>
 
       {/* model */}
       <div className="absolute inset-0 z-20 flex justify-center">
-        <div data-model-scroll className="relative h-full w-full max-w-[1440px] origin-bottom">
+        <div data-model-scroll className="relative h-full w-full max-w-[1440px] origin-bottom will-change-transform">
           <div className="absolute bottom-[12%] left-1/2 aspect-[842/2063] h-[68%] -translate-x-1/2 md:bottom-[-2%] md:left-[57%] md:h-[86%]">
-            <div data-model-move className="h-full w-full">
-              <div data-model className="relative h-full w-full">
-                <Image src={siteImages.heroModel} alt="Model wearing a camel wool coat" fill priority sizes="(max-width:768px) 60vw, 30vw" className="object-contain object-bottom drop-shadow-[0_40px_40px_rgba(20,12,6,0.45)]" />
+            <div data-model-move className="h-full w-full will-change-transform">
+              <div data-model className="relative h-full w-full will-change-transform">
+                {/* cheap floor shadow instead of a drop-shadow filter over the whole cut-out */}
+                <div className="absolute -bottom-[2%] left-1/2 h-[6%] w-[90%] -translate-x-1/2 rounded-[50%] bg-[radial-gradient(closest-side,rgba(20,12,6,0.5),transparent)]" />
+                <Image src={siteImages.heroModel} alt="Model wearing a camel wool coat" fill preload sizes="(max-width:768px) 70vw, 32vw" className="object-contain object-bottom" />
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div data-word className="absolute inset-0 z-30 [transform-style:preserve-3d]">
+      <div data-word className="absolute inset-0 z-30 will-change-transform [transform-style:preserve-3d]">
         <Word layer="over" />
       </div>
 
@@ -175,7 +179,7 @@ export default function Hero() {
       <div data-fade className="absolute inset-x-0 bottom-[5%] z-40 px-4 md:px-[8%]">
         <div
           data-bar
-          className="mx-auto grid max-w-[1180px] grid-cols-2 gap-x-3 gap-y-4 rounded-2xl border border-cream/35 bg-white/[0.07] px-4 py-4 backdrop-blur-md md:px-6 md:py-5 lg:grid-cols-4 lg:py-6"
+          className="mx-auto grid max-w-[1180px] grid-cols-2 gap-x-3 gap-y-4 rounded-2xl border border-cream/35 bg-white/[0.07] px-4 py-4 backdrop-blur-sm md:px-6 md:py-5 lg:grid-cols-4 lg:py-6"
         >
           {FEATURES.map(({ icon: Icon, title, sub }) => (
             <div key={title} data-feature className="group flex items-center gap-3 md:gap-4 md:pl-2">

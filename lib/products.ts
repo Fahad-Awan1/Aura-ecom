@@ -18,14 +18,14 @@ export type Product = {
 };
 
 export const categories: { slug: Category; label: string; image: string }[] = [
-  { slug: "women", label: "Women", image: "/images/cat-women.png" },
-  { slug: "men", label: "Men", image: "/images/cat-men.png" },
-  { slug: "accessories", label: "Accessories", image: "/images/cat-accessories.png" },
-  { slug: "footwear", label: "Footwear", image: "/images/cat-footwear.png" },
+  { slug: "women", label: "Women", image: "/images/cat-women.webp" },
+  { slug: "men", label: "Men", image: "/images/cat-men.webp" },
+  { slug: "accessories", label: "Accessories", image: "/images/cat-accessories.webp" },
+  { slug: "footwear", label: "Footwear", image: "/images/cat-footwear.webp" },
 ];
 
 export const siteImages = {
-  heroModel: "/images/hero-model.png",
+  heroModel: "/images/hero-model.webp",
   rack: "/images/rack.jpg",
   editorial: "/images/editorial-1.jpg",
   store: "/images/store.jpg",

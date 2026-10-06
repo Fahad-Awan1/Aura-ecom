@@ -19,28 +19,34 @@ export default function Marquee() {
       );
       let dir = 1;
       let boost = 0;
-      ScrollTrigger.create({
-        trigger: root.current,
-        start: "top bottom",
-        end: "bottom top",
-        onUpdate: (s) => {
-          dir = s.direction;
-          boost = Math.min(Math.abs(s.getVelocity()) / 400, 6);
-        },
-      });
       const tick = () => {
         boost *= 0.92;
         const target = dir * (1 + boost);
         loops.forEach((l) => l.timeScale(l.timeScale() + (target - l.timeScale()) * 0.1));
       };
-      gsap.ticker.add(tick);
+      // only animate (and run the per-frame speed ticker) while the marquee is on screen
+      loops.forEach((l) => l.pause());
+      ScrollTrigger.create({
+        trigger: root.current,
+        start: "top bottom",
+        end: "bottom top",
+        onToggle: (s) => {
+          loops.forEach((l) => (s.isActive ? l.resume() : l.pause()));
+          if (s.isActive) gsap.ticker.add(tick);
+          else gsap.ticker.remove(tick);
+        },
+        onUpdate: (s) => {
+          dir = s.direction;
+          boost = Math.min(Math.abs(s.getVelocity()) / 400, 6);
+        },
+      });
       return () => gsap.ticker.remove(tick);
     },
     { scope: root },
   );
 
   const row = (outline: boolean) => (
-    <div data-row className="flex w-max shrink-0 items-center">
+    <div data-row className="flex w-max shrink-0 items-center will-change-transform">
       {[0, 1].map((k) => (
         <div key={k} className="flex shrink-0 items-center" aria-hidden={k === 1}>
           {WORDS.map((w) => (

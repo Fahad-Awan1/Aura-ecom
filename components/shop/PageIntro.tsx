@@ -32,11 +32,11 @@ export default function PageIntro({ eyebrow, title, subtitle }: { eyebrow: strin
       className="relative overflow-hidden px-5 pb-16 pt-40 text-center text-cream md:pb-24 md:pt-48"
       style={{ background: "radial-gradient(120% 120% at 60% 0%, #7d6350 0%, #4f3b2d 55%, #3b2a1e 100%)" }}
     >
-      <div className="pointer-events-none absolute -right-[10%] -top-1/2 h-[200%] w-[30%] rotate-[28deg] bg-gradient-to-r from-transparent via-[#f3dcc1]/15 to-transparent blur-2xl" />
+      <div className="pointer-events-none absolute -right-[10%] -top-1/2 h-[200%] w-[30%] rotate-[28deg] bg-[linear-gradient(90deg,transparent,rgba(243,220,193,0.12)_50%,transparent)]" />
       <p data-fade className="eyebrow text-gold">
         {eyebrow}
       </p>
-      <h1 data-t className="mt-4 font-serif text-[clamp(3rem,10vw,8rem)] leading-[0.95]">
+      <h1 data-t className="will-change-transform mt-4 font-serif text-[clamp(3rem,10vw,8rem)] leading-[0.95]">
         {title}
       </h1>
       {subtitle && (

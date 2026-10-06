@@ -93,7 +93,7 @@ export default function ProductCard({ product, initialColor, className, sizes = 
         </Link>
 
         {product.isNew && (
-          <span className="pointer-events-none absolute left-2.5 top-2.5 rounded-full bg-ivory/90 px-2.5 py-1 text-[0.55rem] font-medium uppercase tracking-[0.2em] text-brown-900 backdrop-blur sm:left-3 sm:top-3 sm:px-3 sm:text-[0.6rem]">
+          <span className="pointer-events-none absolute left-2.5 top-2.5 rounded-full bg-ivory/95 px-2.5 py-1 text-[0.55rem] font-medium uppercase tracking-[0.2em] text-brown-900 sm:left-3 sm:top-3 sm:px-3 sm:text-[0.6rem]">
             New
           </span>
         )}
@@ -101,7 +101,7 @@ export default function ProductCard({ product, initialColor, className, sizes = 
           onClick={() => toggleWishlist(product.slug)}
           aria-label={wished ? "Remove from wishlist" : "Add to wishlist"}
           aria-pressed={wished}
-          className="absolute right-2.5 top-2.5 grid h-8 w-8 place-items-center rounded-full bg-ivory/90 text-brown-900 backdrop-blur transition-transform hover:scale-110 sm:right-3 sm:top-3 sm:h-9 sm:w-9"
+          className="absolute right-2.5 top-2.5 grid h-8 w-8 place-items-center rounded-full bg-ivory/95 text-brown-900 transition-transform hover:scale-110 sm:right-3 sm:top-3 sm:h-9 sm:w-9"
         >
           <Heart className={clsx("h-4 w-4 transition-colors", wished && "fill-gold text-gold")} strokeWidth={1.5} />
         </button>
@@ -131,7 +131,7 @@ export default function ProductCard({ product, initialColor, className, sizes = 
           ) : (
             <button
               onClick={() => (product.sizes.length === 1 ? add(product.sizes[0]) : setPicking(true))}
-              className="group/btn relative flex w-full items-center justify-center gap-1.5 overflow-hidden rounded-full bg-brown-900/90 py-2.5 text-[0.6rem] font-medium uppercase tracking-[0.2em] text-cream shadow-lg backdrop-blur transition-colors sm:gap-2 sm:py-3 sm:text-[0.65rem]"
+              className="group/btn relative flex w-full items-center justify-center gap-1.5 overflow-hidden rounded-full bg-brown-900/95 py-2.5 text-[0.6rem] font-medium uppercase tracking-[0.2em] text-cream shadow-lg transition-colors sm:gap-2 sm:py-3 sm:text-[0.65rem]"
             >
               <span className="absolute inset-0 origin-bottom scale-y-0 bg-gold transition-transform duration-500 ease-[cubic-bezier(.7,0,.2,1)] group-hover/btn:scale-y-100" />
               <Plus className="relative h-3.5 w-3.5" />

@@ -24,7 +24,7 @@ export default function RotatingBadge({ text = "Scroll to discover • Aura • 
 
   return (
     <div ref={root} className={clsx("relative grid overflow-hidden h-32 w-32 place-items-center rounded-full bg-ivory text-brown-900 shadow-xl md:h-36 md:w-36", className)}>
-      <div data-spin-scroll className="absolute inset-0">
+      <div data-spin-scroll className="absolute inset-0 will-change-transform">
         <svg data-spin viewBox="0 0 100 100" className="h-full w-full">
           <defs>
             <path id={id} d="M50,50 m-38,0 a38,38 0 1,1 76,0 a38,38 0 1,1 -76,0" />

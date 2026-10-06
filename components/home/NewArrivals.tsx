@@ -77,7 +77,7 @@ export default function NewArrivals() {
         <div className="mt-10 md:mt-14">
           <div data-rail className="no-scrollbar flex gap-5 overflow-x-auto px-5 max-md:snap-x max-md:snap-mandatory md:w-max md:gap-8 md:overflow-visible md:px-10">
             {items.map((p) => (
-              <div key={p.slug} data-skewcard className="w-[70vw] shrink-0 snap-start sm:w-[42vw] md:w-[24vw] md:max-w-[340px]">
+              <div key={p.slug} data-skewcard className="md:will-change-transform w-[70vw] shrink-0 snap-start sm:w-[42vw] md:w-[24vw] md:max-w-[340px]">
                 <ProductCard product={p} />
               </div>
             ))}
